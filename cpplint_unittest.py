@@ -632,6 +632,10 @@ class CpplintTest(CpplintTestBase):
         'uint64 a = (uint64)1.0;',
         'Using C-style cast.  Use static_cast<uint64>(...) instead'
         '  [readability/casting] [4]')
+    self.TestLint(
+        'size_t a = (size_t)1.0;',
+        'Using C-style cast.  Use static_cast<size_t>(...) instead'
+        '  [readability/casting] [4]')
 
     # These shouldn't be recognized casts.
     self.TestLint('u a = (u)NULL;', '')
