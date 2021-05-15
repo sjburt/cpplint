@@ -6687,10 +6687,10 @@ def PrintUsage(message):
   Args:
     message: The optional error message.
   """
-  sys.stderr.write(_USAGE  % (list(GetAllExtensions()),
-       ','.join(list(GetAllExtensions())),
-       GetHeaderExtensions(),
-       ','.join(GetHeaderExtensions())))
+  sys.stderr.write(_USAGE  % (sorted(list(GetAllExtensions())),
+       ','.join(sorted(list(GetAllExtensions()))),
+       sorted(GetHeaderExtensions()),
+       ','.join(sorted(GetHeaderExtensions()))))
 
   if message:
     sys.exit('\nFATAL ERROR: ' + message)
