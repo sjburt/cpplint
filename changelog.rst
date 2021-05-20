@@ -1,9 +1,12 @@
 Changelog
 =========
 
-1.5.5 (TBC)
+1.5.5 (2021-05-20)
 -----
 
+* Fix #172: Added 'size_t' to typecasts detected by CheckCStyleCast
+* Fixed wrong CLI help text: Each filter needs + or -
+* Fix #164: add elif as an exception for CheckSpacingForFunctionCall()
 * Fix google#346: --root option not working on windows due to slashes in path
 
 1.5.4 (2020-08-18)

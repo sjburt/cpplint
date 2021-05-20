@@ -59,7 +59,7 @@ import xml.etree.ElementTree
 # if empty, use defaults
 _valid_extensions = set([])
 
-__VERSION__ = '1.5.4'
+__VERSION__ = '1.5.5'
 
 try:
   xrange          # Python 2
