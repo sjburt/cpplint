@@ -4968,8 +4968,13 @@ class CpplintTest(CpplintTestBase):
   def testBuildInclude(self):
     # Test that include statements have slashes in them.
     self.TestLint('#include "foo.h"',
-                  'Include the directory when naming .h files'
+                  'Include the directory when naming header files'
                   '  [build/include_subdir] [4]')
+    self.TestLint('#include "bar.hh"',
+                  'Include the directory when naming header files'
+                  '  [build/include_subdir] [4]')
+    self.TestLint('#include "baz.aa"', '')
+    self.TestLint('#include "dir/foo.h"', '')
     self.TestLint('#include "Python.h"', '')
     self.TestLint('#include "lua.h"', '')
 
