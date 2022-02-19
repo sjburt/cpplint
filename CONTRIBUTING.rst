@@ -129,7 +129,7 @@ To incorporate google's changes:
     git status --untracked-files=no | grep 'nothing to commit' && git rebase --skip
 
     git push -u origin updates
-    # check travis
+    # check github action
     git push origin --delete updates
 
     git rebase updates master
