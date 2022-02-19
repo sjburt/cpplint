@@ -7,7 +7,7 @@ Done processing src/io_thread.cc
 Done processing src/io_thread.h
 Total errors found: 13
 
-src/chrome_content_renderer_client.cc:113:  Include the directory when naming .h files  [build/include_subdir] [4]
+src/chrome_content_renderer_client.cc:113:  Include the directory when naming header files  [build/include_subdir] [4]
 src/chrome_content_renderer_client.cc:1156:  Use int16/int64/etc, rather than the C type long  [runtime/int] [4]
 src/chrome_content_renderer_client.cc:1161:  Use int16/int64/etc, rather than the C type long  [runtime/int] [4]
 src/chrome_content_renderer_client.cc:5:  samples/chromium-sample/src/chrome_content_renderer_client.cc should include its header file samples/chromium-sample/src/chrome_content_renderer_client.h  [build/include] [5]

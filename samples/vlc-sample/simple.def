@@ -11,7 +11,7 @@ src/libvlc.c:47:  Found C system header after other header. Should be: libvlc.h,
 src/libvlc.c:48:  Found C system header after other header. Should be: libvlc.h, c system, c++ system, other.  [build/include_order] [4]
 src/libvlc.c:49:  Found C system header after other header. Should be: libvlc.h, c system, c++ system, other.  [build/include_order] [4]
 src/libvlc.c:50:  Found C system header after other header. Should be: libvlc.h, c system, c++ system, other.  [build/include_order] [4]
-src/libvlc.c:71:  Include the directory when naming .h files  [build/include_subdir] [4]
+src/libvlc.c:71:  Include the directory when naming header files  [build/include_subdir] [4]
 src/libvlc.c:75:  Found C system header after other header. Should be: libvlc.h, c system, c++ system, other.  [build/include_order] [4]
 src/libvlc.c:86:  Extra space before [  [whitespace/braces] [5]
 src/libvlc.c:86:  Extra space after ( in function call  [whitespace/parens] [4]
