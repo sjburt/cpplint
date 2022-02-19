@@ -1,6 +1,11 @@
 Changelog
 =========
 
+1.6.0 (2022-02-19)
+-----
+
+* Fix #188: "Include the directory when naming header files" also for header files with other names like "*.hpp"
+
 1.5.5 (2021-05-20)
 -----
 
