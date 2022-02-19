@@ -136,6 +136,7 @@ class MockIo(object):
     class EnterableList(list):
       def __enter__(self):
         return self
+
       def __exit__(self, type, value, tb):
         return self
     self.mock_file = EnterableList(mock_file)
@@ -350,7 +351,6 @@ class CpplintTest(CpplintTestBase):
 
     results = self.GetNamespaceResults(lines)
     self.assertEquals(results, '')
-
 
   # Test get line width.
   def testGetLineWidth(self):
@@ -1253,20 +1253,19 @@ class CpplintTest(CpplintTestBase):
 
   def testRawStrings(self):
     self.TestMultiLineLint(
-      """
-      int main() {
-        struct A {
-           A(std::string s, A&& a);
-        };
-      }""",
+        """
+        int main() {
+          struct A {
+             A(std::string s, A&& a);
+          };
+        }""",
         '')
-
     self.TestMultiLineLint(
-      """
-      template <class T, class D = default_delete<T>> class unique_ptr {
-       public:
-          unique_ptr(unique_ptr&& u) noexcept;
-      };""",
+        """
+        template <class T, class D = default_delete<T>> class unique_ptr {
+         public:
+            unique_ptr(unique_ptr&& u) noexcept;
+        };""",
         '')
     self.TestMultiLineLint(
         """
@@ -1964,7 +1963,6 @@ class CpplintTest(CpplintTestBase):
     self.TestLint('  VLOG(WARNING)', errmsg)
     self.TestLint('  VLOG(FATAL)', errmsg)
     self.TestLint('  VLOG(DFATAL)', errmsg)
-
 
   # Test potential format string bugs like printf(foo).
   def testFormatStrings(self):
@@ -2966,7 +2964,6 @@ class CpplintTest(CpplintTestBase):
                   'Missing space around colon in range-based for loop'
                   '  [whitespace/forcolon] [2]')
 
-
   # Static or global STL strings.
   def testStaticOrGlobalSTLStrings(self):
     # A template for the error message for a const global/static string.
@@ -3189,8 +3186,8 @@ class CpplintTest(CpplintTestBase):
     self.TestLint('//====', '')
     self.TestLint('//////', '')
     self.TestLint('////// x', '')
-    self.TestLint('///< x', '') # After-member Doxygen comment
-    self.TestLint('//!< x', '') # After-member Doxygen comment
+    self.TestLint('///< x', '')  # After-member Doxygen comment
+    self.TestLint('//!< x', '')  # After-member Doxygen comment
     self.TestLint('////x', 'Should have a space between // and comment'
                   '  [whitespace/comments] [4]')
     self.TestLint('//}', '')
@@ -3285,9 +3282,9 @@ class CpplintTest(CpplintTestBase):
     error_collector = ErrorCollector(self.assert_)
     raw_bytes = codecs_latin_encode('\xe9x\0')
     if sys.version_info < (3,):
-          unidata = unicode(raw_bytes, 'utf8', 'replace')
+      unidata = unicode(raw_bytes, 'utf8', 'replace')
     else:
-          unidata = str(raw_bytes, 'utf8', 'replace')
+      unidata = str(raw_bytes, 'utf8', 'replace')
     cpplint.ProcessFileData(
         'nul_utf8.cc', 'cc',
         ['// Copyright 2014 Your Company.',
@@ -4796,7 +4793,7 @@ class CpplintTest(CpplintTestBase):
     # do not hardcode the 'styleguide' repository name, it could be anything.
     expected_prefix = re.sub(r'[^a-zA-Z0-9]', '_', styleguide_dir_name).upper() + '_'
     # do not have 'styleguide' repo in '/'
-    self.assertEquals('%sCPPLINT_CPPLINT_TEST_HEADER_H_' %(expected_prefix),
+    self.assertEquals('%sCPPLINT_CPPLINT_TEST_HEADER_H_' % (expected_prefix),
                       cpplint.GetHeaderGuardCPPVariable(file_path))
 
     # To run the 'relative path' tests, we must be in the directory of this test file.
@@ -4811,9 +4808,9 @@ class CpplintTest(CpplintTestBase):
                       cpplint.GetHeaderGuardCPPVariable(file_path))
 
     styleguide_rel_path = os.path.relpath(styleguide_parent_path,
-                                          this_files_path) # '../..'
+                                          this_files_path)  # '../..'
     cpplint._root = styleguide_rel_path
-    self.assertEquals('%sCPPLINT_CPPLINT_TEST_HEADER_H_' %(expected_prefix),
+    self.assertEquals('%sCPPLINT_CPPLINT_TEST_HEADER_H_' % (expected_prefix),
                       cpplint.GetHeaderGuardCPPVariable(file_path))
 
     cpplint._root = None
@@ -6312,7 +6309,7 @@ class NestingStateTest(unittest.TestCase):
 
   def testTemplateDefaultArg(self):
     self.UpdateWithLines([
-      'template <class T, class D = default_delete<T>> class unique_ptr {',])
+      'template <class T, class D = default_delete<T>> class unique_ptr {'])
     self.assertEquals(len(self.nesting_state.stack), 1)
     self.assertTrue(self.nesting_state.stack[0], isinstance(self.nesting_state.stack[0], cpplint._ClassInfo))
 
@@ -6456,7 +6453,7 @@ class QuietTest(unittest.TestCase):
 
     cmd_line = [self.python_executable, cpplint_abspath] +                     \
         list(args) +                                                           \
-        [ self.cpplint_test_h ]
+        [self.cpplint_test_h]
 
     return_code = 0
     try:
@@ -6520,9 +6517,9 @@ class QuietTest(unittest.TestCase):
     # Output with no errors must be completely blank!
     self.assertEquals("", output)
 
-#class FileFilterTest(unittest.TestCase):
-#  def testFilterExcludedFiles(self):
-#    self.assertEquals([], _FilterExcludedFiles([]))
+# class FileFilterTest(unittest.TestCase):
+#   def testFilterExcludedFiles(self):
+#     self.assertEquals([], _FilterExcludedFiles([]))
 
 # pylint: disable=C6409
 def setUp():

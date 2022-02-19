@@ -64,8 +64,8 @@ You can setup your local environment for developing patches for cpplint like thi
     # run all tests
     ./setup.py test
     ./setup.py lint
-    ./setup.py style
     ./setup.py ci # all the above
+    ./flake8
     tox    # all of the above in all python environments
 
 Releasing
