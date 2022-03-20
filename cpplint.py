@@ -5852,7 +5852,8 @@ def CheckCStyleCast(filename, clean_lines, linenum, cast_type, pattern, error):
     return False
 
   # operator++(int) and operator--(int)
-  if context.endswith(' operator++') or context.endswith(' operator--'):
+  if (context.endswith(' operator++') or context.endswith(' operator--') or
+      context.endswith('::operator++') or context.endswith('::operator--')):
     return False
 
   # A single unnamed argument for a function tends to look like old style cast.

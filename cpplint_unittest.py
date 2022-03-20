@@ -653,6 +653,8 @@ class CpplintTest(CpplintTestBase):
     self.TestLint('void F(int (Class::member)(int*));', '')
     self.TestLint('void F(int (Class::member)(int), int param);', '')
     self.TestLint('void F(int (Class::member)(int*), int param);', '')
+    self.TestLint('X Class::operator++(int)', '')
+    self.TestLint('X Class::operator--(int)', '')
 
     # These should not be recognized (lambda functions without arg names).
     self.TestLint('[](int/*unused*/) -> bool {', '')
