@@ -6533,7 +6533,7 @@ def ProcessConfigOverrides(filename):
       continue
 
     try:
-      with open(cfg_file, encoding='utf-8') as file_handle:
+      with codecs.open(cfg_file, 'r', 'utf8', 'replace') as file_handle:
         for line in file_handle:
           line, _, _ = line.partition('#')  # Remove comments.
           if not line.strip():
