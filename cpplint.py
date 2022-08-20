@@ -64,7 +64,7 @@ import xml.etree.ElementTree
 # if empty, use defaults
 _valid_extensions = set([])
 
-__VERSION__ = '1.6.0'
+__VERSION__ = '1.6.1'
 
 try:
   #  -- pylint: disable=used-before-assignment
