@@ -50,7 +50,9 @@ import codecs
 import copy
 import getopt
 import glob
+import hashlib
 import itertools
+import json
 import math  # for log
 import os
 import re
@@ -75,7 +77,7 @@ except NameError:
 
 
 _USAGE = """
-Syntax: cpplint.py [--verbose=#] [--output=emacs|eclipse|vs7|junit|sed|gsed]
+Syntax: cpplint.py [--verbose=#] [--output=emacs|eclipse|vs7|codeclimate|junit|sed|gsed]
                    [--filter=-x,+y,...]
                    [--counting=total|toplevel|detailed] [--root=subdir]
                    [--repository=path]
@@ -1287,6 +1289,8 @@ class _CppLintState(object):
     self._junit_errors = []
     self._junit_failures = []
 
+    self._code_climate_failures = []
+
   def SetOutputFormat(self, output_format):
     """Sets the output format for errors."""
     self.output_format = output_format
@@ -1383,6 +1387,30 @@ class _CppLintState(object):
     self._junit_failures.append((filename, linenum, message, category,
         confidence))
 
+  def AddCodeClimateFailure(self, filename, linenum, message, category, context):
+    if context:
+      context = context.replace(' ', '').replace('\t', '').replace('\n', '')
+      fingerprint = hashlib.md5((message + category + filename + context).encode('utf-8')).hexdigest()
+    else:
+      fingerprint = hashlib.md5((message + category + filename + str(linenum)).encode('utf-8')).hexdigest()
+    issue = {
+        "type": "issue",
+        "engine_name": "cpplint",
+        "check_name": category,
+        "description": message,
+        "categories": ["Style"],
+        "severity" : "minor",
+        "fingerprint": fingerprint,
+        "location": {
+            "path": filename,
+            "lines": {
+                "begin": int(linenum),
+                "end": int(linenum)
+            }
+        }
+    }
+    self._code_climate_failures.append(issue)
+
   def FormatJUnitXML(self):
     num_errors = len(self._junit_errors)
     num_failures = len(self._junit_failures)
@@ -1425,6 +1453,9 @@ class _CppLintState(object):
 
     xml_decl = '<?xml version="1.0" encoding="UTF-8" ?>\n'
     return xml_decl + xml.etree.ElementTree.tostring(testsuite, 'utf-8').decode('utf-8')
+
+  def FormatCodeClimateJSON(self):
+    return json.dumps(self._code_climate_failures, indent=2) + '\n'
 
 
 _cpplint_state = _CppLintState()
@@ -1697,6 +1728,17 @@ def _ShouldPrintError(category, confidence, linenum):
   return True
 
 
+def get_context(line_no, c_size = 3):
+  """Returns nearby lines; useful for fingerprinting errors"""
+
+  lines = _cpplint_state.lines
+  low = line_no - c_size
+  if low < 0:
+    low = 0
+  high = line_no + c_size
+  return '\n'.join(lines[low:high])
+
+
 def Error(filename, linenum, category, confidence, message):
   """Logs the fact we've found a lint error.
 
@@ -1730,6 +1772,9 @@ def Error(filename, linenum, category, confidence, message):
     elif _cpplint_state.output_format == 'junit':
       _cpplint_state.AddJUnitFailure(filename, linenum, message, category,
           confidence)
+    elif _cpplint_state.output_format == 'codeclimate':
+      context = get_context(linenum)
+      _cpplint_state.AddCodeClimateFailure(filename, linenum, message, category, context)
     elif _cpplint_state.output_format in ['sed', 'gsed']:
       if message in _SED_FIXUPS:
         sys.stdout.write(_cpplint_state.output_format + " -i '%s%s' %s # %s  [%s] [%d]\n" % (
@@ -6669,6 +6714,8 @@ def ProcessFile(filename, vlevel, extra_check_functions=None):
   # Note, if no dot is found, this will give the entire filename as the ext.
   file_extension = filename[filename.rfind('.') + 1:]
 
+  _cpplint_state.lines = lines
+
   # When reading from stdin, the extension is unknown, so no cpplint tests
   # should rely on the extension.
   if filename != '-' and file_extension not in GetAllExtensions():
@@ -6776,9 +6823,9 @@ def ParseArguments(args):
     if opt == '--version':
       PrintVersion()
     elif opt == '--output':
-      if val not in ('emacs', 'vs7', 'eclipse', 'junit', 'sed', 'gsed'):
+      if val not in ('emacs', 'vs7', 'eclipse', 'junit', 'sed', 'gsed', 'codeclimate'):
         PrintUsage('The only allowed output formats are emacs, vs7, eclipse '
-                   'sed, gsed and junit.')
+                   'sed, gsed, codeclimate, and junit.')
       output_format = val
     elif opt == '--quiet':
       quiet = True
@@ -6912,6 +6959,9 @@ def main():
 
     if _cpplint_state.output_format == 'junit':
       sys.stderr.write(_cpplint_state.FormatJUnitXML())
+
+    if _cpplint_state.output_format == 'codeclimate':
+      sys.stderr.write(_cpplint_state.FormatCodeClimateJSON())
 
   finally:
     sys.stderr = backup_err
